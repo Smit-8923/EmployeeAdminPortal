@@ -4,7 +4,8 @@ using EmployeeAdminPortal.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Numerics;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAdminPortal.Controllers
 {
@@ -24,31 +25,27 @@ namespace EmployeeAdminPortal.Controllers
         public IActionResult GetAllEmployees()
         {
             var allEmployees = dbContext.Employees.ToList();
-            if (allEmployees == null || !allEmployees.Any())
-            {
-                return NotFound(); // Returns 404 not found 
-            }
-            return Ok(allEmployees);    
+            return Ok(allEmployees);
         }
 
         [HttpGet]
-        [Route("{id:guid}")]
-        public IActionResult GetEmployeesById(Guid id)
+        [Route("{id:Guid}")]
+        public IActionResult GetEmployeesById([FromRoute] Guid id)
         {
             var employee = dbContext.Employees.Find(id);
             if (employee == null)
             {
-                return NotFound($"Employee with ID '{id}' does not exist."); ; // give result 
+                return NotFound($"Employee with ID '{id}' does not exist.");
             }
             return Ok(employee);
         }
         
         [HttpPost]
-        public IActionResult AddEmployee(AddEmployeeDto addEmployeeDto)
+        public IActionResult AddEmployee([FromBody] AddEmployeeDto addEmployeeDto)
         {
-
             var employeeEntity = new Employee()
             {
+                Id = Guid.NewGuid(),
                 Name = addEmployeeDto.Name,
                 Email = addEmployeeDto.Email,
                 Phone = addEmployeeDto.Phone,
@@ -62,39 +59,53 @@ namespace EmployeeAdminPortal.Controllers
         }
 
         [HttpPut]
-        [Route("{id:guid}")]
-        public IActionResult UpdateEmployee(Guid id, UpdateEmployeeDto updateEmployeeDto)
+        [Route("{id:Guid}")]
+        public IActionResult UpdateEmployee([FromRoute] Guid id, [FromBody] UpdateEmployeeDto updateEmployeeDto)
         {
-            var employee = dbContext.Employees.Find(id);
-            if (employee == null)
+            try
             {
-                return NotFound("It's not found");
+                var employee = dbContext.Employees.Find(id);
+                if (employee == null)
+                {
+                    return NotFound($"Employee with ID '{id}' not found");
+                }
+
+                employee.Name = updateEmployeeDto.Name;
+                employee.Email = updateEmployeeDto.Email;
+                employee.Phone = updateEmployeeDto.Phone;
+                employee.Salary = updateEmployeeDto.Salary;
+
+                dbContext.SaveChanges();
+
+                return Ok(employee);
             }
-
-            employee.Name = updateEmployeeDto.Name;
-            employee.Email = updateEmployeeDto.Email;
-            employee.Phone = updateEmployeeDto.Phone;
-            employee.Salary = updateEmployeeDto.Salary;
-
-            dbContext.SaveChanges();
-
-            return Ok(employee);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating the employee: {ex.Message}");
+            }
         }
 
         [HttpDelete]
-        [Route("{id:guid}")]
-        public IActionResult DeleteEmployee(Guid id)
+        [Route("{id:Guid}")]
+        public IActionResult DeleteEmployee([FromRoute] Guid id)
         {
-            var Employee = dbContext.Employees.Find(id);
-            if (Employee == null)
+            try
             {
-                return NotFound();
+                var employee = dbContext.Employees.Find(id);
+                if (employee == null)
+                {
+                    return NotFound($"Employee with ID '{id}' not found");
+                }
+
+                dbContext.Employees.Remove(employee);
+                dbContext.SaveChanges();
+
+                return Ok(employee);
             }
-
-            dbContext.Employees.Remove(Employee);
-            dbContext.SaveChanges();
-
-            return Ok(Employee);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while deleting the employee: {ex.Message}");
+            }
         }
     }
 }
