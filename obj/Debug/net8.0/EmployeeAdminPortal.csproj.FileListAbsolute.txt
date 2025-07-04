@@ -154,6 +154,7 @@ C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\Employe
 C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\EmployeeAdminPortal.csproj.CoreCompileInputs.cache
 C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\EmployeeAdminPortal.MvcApplicationPartsAssemblyInfo.cs
 C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\EmployeeAdminPortal.MvcApplicationPartsAssemblyInfo.cache
+C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\EmployeeAdminPortal.sourcelink.json
 C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Net Practise\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
